@@ -6,7 +6,7 @@ router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'roles', RoleViewSet)
 router.register(r'permissions', PermissionViewSet)
-router.register(r'audit-logs', AuditLogViewSet)
+router.register(r'audit-logs', AuditLogViewSet)  # Ensure this line is present
 
 urlpatterns = [
     path('api/', include(router.urls)),
