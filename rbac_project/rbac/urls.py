@@ -6,10 +6,10 @@ router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'roles', RoleViewSet)
 router.register(r'permissions', PermissionViewSet)
-router.register(r'audit-logs', AuditLogViewSet)
+router.register(r'audit-logs', AuditLogViewSet)  # Ensure this line is present
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
     path('create-user/', create_user, name='create-user'),
     path('create-role/', create_role, name='create-role'),
 ]
