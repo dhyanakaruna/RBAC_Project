@@ -9,7 +9,7 @@ router.register(r'permissions', PermissionViewSet)
 router.register(r'audit-logs', AuditLogViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
     path('create-user/', create_user, name='create-user'),
     path('create-role/', create_role, name='create-role'),
 ]
