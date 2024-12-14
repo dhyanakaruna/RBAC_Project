@@ -5,6 +5,8 @@ from django.shortcuts import render, redirect
 from .models import User, Role, Permission, AuditLog
 from .serializers import UserSerializer, RoleSerializer, PermissionSerializer, AuditLogSerializer
 from .forms import UserForm, RoleForm
+from .utils import log_access_attempt
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -51,4 +53,21 @@ class PermissionViewSet(viewsets.ModelViewSet):
 class AuditLogViewSet(viewsets.ModelViewSet):
     queryset = AuditLog.objects.all()
     serializer_class = AuditLogSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    @action(detail=True, methods=['post'])
+    def assign_role(self, request, pk=None):
+        user = self.get_object()
+        try:
+            role = Role.objects.get(id=request.data['role_id'])
+            user.roles.add(role)
+            log_access_attempt(request.user, "assign_role", f"Role: {role.name}", True)
+            return Response({'status': 'role assigned'}, status=status.HTTP_200_OK)
+        except Role.DoesNotExist:
+            log_access_attempt(request.user, "assign_role", "Invalid Role", False)
+            return Response({'error': 'Role not found'}, status=status.HTTP_404_NOT_FOUND)
 
