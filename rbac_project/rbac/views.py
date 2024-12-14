@@ -71,3 +71,15 @@ class UserViewSet(viewsets.ModelViewSet):
             log_access_attempt(request.user, "assign_role", "Invalid Role", False)
             return Response({'error': 'Role not found'}, status=status.HTTP_404_NOT_FOUND)
 
+class AuditLogViewSet(viewsets.ModelViewSet):
+    queryset = AuditLog.objects.all()
+    serializer_class = AuditLogSerializer
+
+    @action(detail=False, methods=['get'])
+    def recent_logs(self, request):
+        """To Get logs from the past 24 hours."""
+        from django.utils.timezone import now, timedelta
+        last_24_hours = now() - timedelta(hours=24)
+        logs = AuditLog.objects.filter(timestamp__gte=last_24_hours)
+        serializer = self.get_serializer(logs, many=True)
+        return Response(serializer.data)
