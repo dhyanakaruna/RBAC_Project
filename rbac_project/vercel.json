@@ -1,8 +1,12 @@
 {
-  "routes": [
+  "version": 2,
+  "builds": [
     {
-      "src": "/(.*)",
-      "dest": "rbac_project/wsgi.py"
+      "src": "rbac_project/asgi.py",
+      "use": "@vercel/python"
     }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "rbac_project/asgi.py" }
   ]
 }
